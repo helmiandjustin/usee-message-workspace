@@ -79,6 +79,7 @@
           <option value="short">Template 2 — Pesan singkat</option>
           <option value="latest">Template 3 — Product list terbaru</option>
           <option value="link-update">Template 4 — Update showcase link</option>
+          <option value="sample-request">Template 5 — Sample request</option>
         </select>
         <div class="actions template-actions">
           <button id="loadTemplate" type="button">Gunakan template</button>
@@ -219,7 +220,12 @@ ${productHtml}
 <p>After requesting them, reply to this email with:<br><strong>Done + your TikTok username</strong></p>
 <p>Looking forward to working with you! ❤️</p>`,
       latest: buildLatestTemplate(latestProductHtml),
-      'link-update': buildLinkUpdateTemplate(latestProductGroups)
+      'link-update': buildLinkUpdateTemplate(latestProductGroups),
+      'sample-request': `<p>Hi dear! 🥰 Thanks for your interest in our campaign!</p>
+<p>As a little thank-you, you're welcome to request free products through any of the links I've shared. You can use them for your <strong>upcoming videos</strong>, LIVE sessions, or even for personal use! 💕 (please request only 2 products)</p>
+<p><strong>FYI!</strong> All products have exclusive flash sales and TikTok-supported LIVE ads until the end of this month, so it's a good time to go LIVE and boost your sales!</p>
+<p>To get started, simply click any of the links and added to your showcase I've shared and follow the step-by-step instructions in the attachment to request your samples.</p>
+<p>Once you've requested your samples, let me know so I can approve them. If your request is still pending or you'd like to prioritize certain samples, just message me on WhatsApp or email. 💕</p>`
     };
 
     let savedTemplates = {};
