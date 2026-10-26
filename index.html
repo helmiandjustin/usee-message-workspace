@@ -1,59 +1,453 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>USEE Message Workspace</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>USEE Email Templates</title>
   <style>
-    :root{font-family:Inter,Arial,sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:1240px;margin:auto;padding:28px 18px 48px}h1{margin:0 0 6px}.sub{margin:0 0 22px;color:#667085}.tabs{display:flex;gap:8px;margin-bottom:16px}.tabs button,.actions button{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}.tabs button{background:#e8edf5;color:#344054}.tabs button.active,.primary{background:#1769e0!important;color:white!important}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:18px;box-shadow:0 4px 18px #1720330d;min-width:0}#email .grid{grid-template-columns:360px minmax(0,1fr)}#template .grid{grid-template-columns:minmax(500px,1fr) minmax(0,1fr)}#template .grid>.card:first-child{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}label{display:block;margin:0 0 7px;font-weight:700;font-size:14px}textarea,input,select{width:100%;border:1px solid #cfd5df;border-radius:9px;padding:10px;font:inherit}textarea{min-height:180px;resize:vertical}#message{min-height:390px;font-family:Consolas,monospace;font-size:13px}.hint{margin:7px 0;color:#667085;font-size:12px}.actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.status{font-size:13px}.product-group{margin-top:12px;padding:12px;border:1px solid #e4e7ec;border-radius:9px;background:#fafbfc}.product-group-title{font-weight:700;margin-bottom:8px}.product-head{display:grid;grid-template-columns:2fr 2fr 1.5fr .8fr 2.5fr;gap:6px;padding:0 4px 4px;color:#667085;font-size:11px;font-weight:700}.product-row{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:6px}.product-row input:nth-child(5){grid-column:1/3}.product-row .remove{grid-column:3;grid-row:1 / span 2;align-self:stretch}.product-row input{min-width:0;font-size:12px;transition:border-color .15s,background .15s}.product-row:hover input{background:#f8fbff}.product-row input:focus{border-color:#1769e0;background:#fff;outline:2px solid #1769e01c}.remove{background:#d92d20;color:white;border:0;border-radius:7px;padding:7px 10px;cursor:pointer}.preview{min-height:390px;overflow:visible;overflow-wrap:anywhere;word-break:break-word;border:1px solid #e4e7ec;border-radius:9px;padding:14px;background:white;line-height:1.55}.preview p{margin:0 0 16px}.preview a,.preview a:visited{color:#06c;text-decoration:underline}.editable-preview{cursor:text}.editable-preview:focus{outline:2px solid #1769e0;border-color:#1769e0}.editor-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}@media(max-width:900px){.grid,#email .grid,#template .grid{grid-template-columns:1fr}.product-head{display:none}#template .grid>.card:first-child{position:static;max-height:none;overflow:visible}.product-row{grid-template-columns:1fr 1fr}.product-row .remove{grid-column:1 / -1;grid-row:auto}}
+    :root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #182230; background: #f5f7ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 10% 0%, #e8e8ff 0, transparent 28rem), #f5f7ff; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 42px 22px 64px; }
+    .eyebrow { color: #6557e8; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 7px 0 6px; font-size: clamp(28px, 5vw, 42px); letter-spacing: -.04em; line-height: 1.05; }
+    .sub { margin: 0 0 26px; color: #667085; font-size: 15px; }
+    .grid { display: grid; grid-template-columns: minmax(330px, .78fr) minmax(0, 1.22fr); gap: 18px; align-items: start; }
+    .card { background: #fff; border: 1px solid #e3e6f2; border-radius: 20px; padding: 20px; box-shadow: 0 18px 45px #4438a312; }
+    .card > label { color: #242b3a; }
+    label { display: block; margin: 0 0 8px; font-weight: 800; font-size: 13px; }
+    textarea, input, select { width: 100%; border: 1px solid #d7dced; border-radius: 12px; padding: 11px 12px; color: #182230; background: #fbfcff; font: inherit; transition: border-color .15s, box-shadow .15s, background .15s; }
+    textarea:focus, input:focus, select:focus { outline: 0; border-color: #7667f4; background: white; box-shadow: 0 0 0 4px #7667f41c; }
+    textarea { min-height: 150px; resize: vertical; }
+    #message { min-height: 390px; font-family: Consolas, monospace; font-size: 13px; }
+    .hint { margin: 8px 0 0; color: #7a8499; font-size: 12px; line-height: 1.45; }
+    .actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 11px; padding: 11px 16px; color: white; background: #635bdf; font-weight: 800; cursor: pointer; transition: transform .15s, background .15s, box-shadow .15s; }
+    button:hover { background: #5149c9; box-shadow: 0 8px 18px #635bdf2b; transform: translateY(-1px); }
+    button.secondary { color: #5149c9; background: #eeedff; }
+    button.danger { color: #c4314b; background: #fff0f3; }
+    button:disabled { opacity: .6; cursor: wait; }
+    #status { color: #6557e8; font-size: 13px; font-weight: 700; }
+    .preview { min-height: 390px; overflow: auto; border: 1px solid #e3e6f2; border-radius: 14px; padding: 18px; line-height: 1.55; }
+    .preview-tools { display: flex; gap: 6px; margin: 10px 0; }
+    .preview-tools button { padding: 7px 10px; color: #344054; background: #eef2f7; font-size: 12px; }
+    .preview-tools button.active { color: white; background: #1769e0; }
+    a { color: #4f46e5; text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: 2px; }
+    .preview-frame { display: flex; justify-content: center; background: #f0f1f8; padding: 12px; border-radius: 14px; overflow: auto; }
+    .preview-frame .preview { width: 100%; min-height: 390px; background: white; }
+    .preview-frame.mobile .preview { width: 390px; }
+    .preview-frame.tablet .preview { width: 768px; }
+    .preview-frame.desktop .preview { width: 100%; }
+    .product-group { margin-top: 14px; padding: 13px; border: 1px solid #e3e6f2; border-radius: 15px; background: #f9faff; }
+    .product-group-title { margin-bottom: 8px; font-weight: 800; background: #f1efff; }
+    .product-row { display: grid; grid-template-columns: 1.2fr 1.2fr .7fr .7fr auto; gap: 6px; margin-top: 6px; }
+    .product-row input:nth-child(5) { grid-column: 1 / 3; }
+    .product-row input { min-width: 0; padding: 8px; font-size: 12px; }
+    .product-row button { padding: 7px 10px; background: #fff0f0; color: #d92d20; }
+    .product-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .template-save-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 10px; }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .product-row { grid-template-columns: 1fr 1fr; } .product-row input:nth-child(5) { grid-column: 1 / -1; } .template-save-row { grid-template-columns: 1fr; } }
   </style>
 </head>
-<body><main>
-  <h1>USEE Message Workspace</h1><p class="sub">Kelola product link, buat template Outlook, dan kirim ke email target dari satu tempat.</p>
-  <nav class="tabs"><button class="active" data-tab="email">Email Target</button><button data-tab="template">Message Template</button></nav>
+<body>
+  <main>
+    <div class="eyebrow">USEE Media · Creator outreach</div>
+    <h1>Email workspace</h1>
+    <p class="sub">Pilih template, ganti produk/link, lalu kirim ke Outlook lewat Power Automate.</p>
 
-  <section id="email" class="panel active"><div class="grid"><div class="card">
-    <label for="emails">Email target</label><textarea id="emails" placeholder="one@email.com\ntwo@email.com"></textarea><p class="hint">Satu email per baris. Otomatis dibagi 50 email per batch.</p>
-    <label for="endpoint">Power Automate endpoint</label><input id="endpoint" type="url" placeholder="Tempel URL HTTP trigger di sini"><p class="hint">Endpoint hanya dipakai saat klik kirim dan tidak disimpan.</p>
-    <label for="emailTemplate">Template Outlook</label><select id="emailTemplate"><option value="seeding">Seeding Product</option><option value="showcase">Showcase Link Update</option></select>
-    <div class="actions"><button class="primary" id="send">Send to Outlook</button><span class="status" id="emailStatus"></span></div>
-  </div><div class="card"><label>Preview pesan</label><div id="emailPreview" class="preview"></div></div></div></section>
+    <section class="grid">
+      <div class="card">
+        <label for="emails">Email target</label>
+        <textarea id="emails" placeholder="one@email.com\ntwo@email.com"></textarea>
+        <p class="hint">Satu alamat email per baris. Website otomatis membagi setiap 50 email per batch.</p>
 
-  <section id="template" class="panel"><div class="grid"><div class="card">
-    <label for="catalog">Product database</label><select id="catalog"><option value="seeding">Seeding Catalog</option><option value="showcase">Showcase Catalog</option></select><p class="hint">Catalog terpisah sesuai template, jadi produk JIYU tidak tercampur dengan Laura Geller/COSRX.</p><div class="product-head"><span>Product / brand</span><span>Description</span><span>PID</span><span>Commission</span><span>Product link</span></div><div id="products"></div><div class="editor-actions"><button id="add">+ Add product</button><button class="primary" id="save">Save products</button></div><p class="hint">Data tersimpan di browser ini. PID boleh dikosongkan.</p>
-  </div><div class="card"><label for="message">Outlook HTML template</label><textarea id="message"></textarea><div class="actions"><button class="primary" id="copy">Copy HTML</button><button id="copyText">Copy plain text</button><button id="refresh">Refresh from products</button><span class="status" id="templateStatus"></span></div><div class="editor-actions"><input id="templateName" placeholder="Template name, e.g. Seeding October"><button id="saveTemplate">Save template</button><button id="deleteTemplate">Delete saved</button></div><p class="hint">Preview di bawah bisa diedit langsung. Perubahan akan ikut dikirim ke Power Automate.</p><div id="preview" class="preview editable-preview" contenteditable="true" spellcheck="true"></div></div></div></section>
-</main><script>
-const $=s=>document.querySelector(s), esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const seed=[['Laura Geller Beauty','TOP 1 Cosmetics category','','19%','https://affiliate-us.tiktok.com/api/v1/share/AJR1ZpsOL2Tx'],['Missha.official','TOP 2 Cosmetics Category','','16%','https://affiliate-us.tiktok.com/api/v1/share/AJr730r5qXKT'],['epais','TOP 3 selling','','17%','https://affiliate-us.tiktok.com/api/v1/share/AJm3Z1gBIGtc'],['DR.Melaxin eye cream','TOP 4','','24%','https://affiliate-us.tiktok.com/api/v1/share/AJgq5DuwThqi'],['DR.Melaxin acne patch','','24%','https://affiliate-us.tiktok.com/api/v1/share/AJgq5ObngzDG'],['Medicube','All product link','','19%','https://affiliate-us.tiktok.com/api/v1/share/AJoWb7mq7Igr'],['COSRX','All product link','','29%','https://affiliate-us.tiktok.com/api/v1/share/AJoWk2StXIJ3'],['SKIN1004','All product link','','24%','https://affiliate-us.tiktok.com/api/v1/share/AJoX6yXB3o1X']];
-const seedSeeding=[['NEW — JIYU (Korean Skincare Brand)','Personal Care','','31%','https://affiliate-us.tiktok.com/api/v1/share/AJqidq7XeolK'],['Medicube NAD+ EGF Power Duo','Personal Care','','20%','https://affiliate-us.tiktok.com/api/v1/share/AJZrU8uWnx8l'],['Skin 1004','Personal Care','','19%','https://affiliate-us.tiktok.com/api/v1/share/AJXwVMmP13JO'],['Laura Geller Foundation Kit','Makeup & Cosmetics','','22%','https://affiliate-us.tiktok.com/api/v1/share/AJV3UZBEKFGB'],['MISSHA M Perfect Cover BB Cream','Makeup & Cosmetics','','25%','https://affiliate-us.tiktok.com/api/v1/share/AJU0jd5roqBU'],['Phofay Hair Removal Cream','Skincare & Personal Hygiene','','15%','https://affiliate-us.tiktok.com/api/v1/share/AJSkxJHH6wRt'],['Centellian24','Skincare & Personal Hygiene','','20%','https://affiliate-us.tiktok.com/api/v1/share/AJooMytdSTQ1'],["d'Alba Piedmont",'Skincare & Personal Hygiene','','17%','https://affiliate-us.tiktok.com/api/v1/share/AJosZNv3bW6Z']];
-let catalog='seeding';
-function normalizeProduct(p){return p.length===4?[p[0],p[1],'',p[2],p[3]]:p}
-function loadCatalog(key){const fallback=key==='seeding'?seedSeeding:seed;const saved=JSON.parse(localStorage.getItem(`useeProducts:${key}`)||'null');return (saved||fallback).map(normalizeProduct)}
-let products=loadCatalog(catalog);
-let savedTemplates=JSON.parse(localStorage.getItem('useeTemplates')||'{}');
-function render(){ $('#products').innerHTML=products.map((p,i)=>`<div class="product-row" data-i="${i}"><input data-f="0" value="${esc(p[0])}" placeholder="Product / brand"><input data-f="1" value="${esc(p[1])}" placeholder="Description"><input data-f="2" value="${esc(p[2])}" placeholder="Product ID / PID"><input data-f="3" value="${esc(p[3])}" placeholder="Commission"><input data-f="4" value="${esc(p[4])}" placeholder="Product link"><button class="remove" data-remove="${i}" title="Delete product">×</button></div>`).join('')}
-function read(){return [...document.querySelectorAll('.product-row')].map(r=>[0,1,2,3,4].map(i=>r.querySelector(`[data-f="${i}"]`).value.trim())).filter(p=>p[0]&&p[3]&&p[4])}
-function catalogProducts(key){return key===catalog?products:loadCatalog(key)}
-function productList(list=products){return list.map(p=>`<li><strong>${esc(p[0])}</strong>${p[1]?` — ${esc(p[1])}`:''}${p[2]?` [PID: ${esc(p[2])}]`:''}: <a href="${esc(p[4])}">${esc(p[4])}</a> (${esc(p[3])})</li>`).join('')}
-function buildShowcase(){return `<p>Hi dear,</p><p>I’m Justin from USEE Media, an official TikTok affiliate partner agency.</p><p>We’re offering higher commission up to <strong>34%</strong>, free product bundles, ads boosting support, and long-term collaboration opportunities.</p><p>You only need to update the product link in your showcase, then use it for a LIVE or video post.</p><p><strong>Pick a product link:</strong></p><ul>${productList(catalogProducts('showcase'))}</ul><p><strong>Get started:</strong></p><ol><li>Add the product to your showcase or request a free sample.</li><li>Reply with <strong>YES UPDATED</strong>.</li><li>Change the product link.</li><li>Post the content after 24 hours.</li></ol><p>Looking forward to working with you.</p>`}
-function seedingLine(p){return `<p>* <strong>${esc(p[0])}</strong>. ${esc(p[3])} commission<br><a href="${esc(p[4])}">${esc(p[4])}</a></p>`}
-function buildSeeding(){const list=catalogProducts('seeding');return `<p>Hi dear! ❤️ Thanks for your interest in our campaigns! 🎉</p><p>I checked your profile and found some products that could be a great fit for your content. <strong>Please see the attachment when requesting products.</strong></p><p>Here are 3 categories you can choose from 👇</p><p><strong>1️⃣ Personal Care</strong></p><p>Great for general personal care content. Includes ads support, trending products, and an average of $8–15 per sale.</p>${list.slice(0,3).map(seedingLine).join('')}<p><strong>2️⃣ Makeup &amp; Cosmetics</strong></p><p>Best for makeup creators. Includes free ads support and guaranteed GMV opportunities.</p>${list.slice(3,5).map(seedingLine).join('')}<p><strong>3️⃣ Skincare &amp; Personal Hygiene</strong></p>${list.slice(5).map(seedingLine).join('')}<p><strong>🎬 TRIAL COLLABORATION</strong></p><p><strong>For this trial, we'd love you to create 5 videos featuring the 2 products you request.</strong></p><p><strong>The best part:</strong><br>✅ No draft approval or revisions<br>✅ Full creative freedom<br>✅ Free product samples<br>✅ Ads support</p><p>Please note that completing the 5 videos is required to maintain your showcase eligibility and comply with TikTok's campaign requirements.</p><p><strong>📌 IMPORTANT</strong></p><p>1. Please request 2 products from the list above. Other products may not be guaranteed approval.</p><p>Not interested in these products? No worries! We have 700+ products from brands like VT Cosmetics and SKIN1004:<br><a href="https://usee88-my.sharepoint.com/shared?id=%2Fpersonal%2Fhelmi%5Fusee%2Dmedia%5Fcom%2FDocuments%2FUSEE%20Media%20TAP%20%E2%80%93%20Creator%20Toolkit%20Brands%2Epdf">https://usee88-my.sharepoint.com/shared?id=%2Fpersonal%2Fhelmi%5Fusee%2Dmedia%5Fcom%2FDocuments%2FUSEE%20Media%20TAP%20%E2%80%93%20Creator%20Toolkit%20Brands%2Epdf</a></p><p>Here's our step-by-step collaboration guide:<br><a href="https://usee88-my.sharepoint.com/:b:/g/personal/helmi_usee-media_com/IQCGbGZijNLSR6nBa5S3k9jMAZ1mpWROQJYoYoaNCC1IN7Y?e=cuN3gN">https://usee88-my.sharepoint.com/:b:/g/personal/helmi_usee-media_com/IQCGbGZijNLSR6nBa5S3k9jMAZ1mpWROQJYoYoaNCC1IN7Y?e=cuN3gN</a></p><p><strong>PLEASE CONFIRM</strong> after requesting the samples by replying to this email with:<br><strong>"Done + your TikTok username"</strong></p><p>If you have trouble requesting samples, just let me know. I'll also share the guide and October rewards to help you get started.</p><p>Looking forward to working with you! ❤️</p>`}
-function buildSeeding(){const list=catalogProducts('seeding');return `<p>Hi dear! ❤️ Thanks for your interest in our campaigns! 🎉</p><p>I checked your profile and found some products that could be a great fit for your content. <strong>Please see the attachment when requesting products.</strong></p><p>Here are 3 categories you can choose from 👇</p><p><strong>1️⃣ Personal Care</strong></p><p>Great for general personal care content. Includes ads support, trending products, and an average of $8–15 per sale.</p>${list.slice(0,3).map(seedingLine).join('')}<p><strong>2️⃣ Makeup &amp; Cosmetics</strong></p><p>Best for makeup creators. Includes free ads support and guaranteed GMV opportunities.</p>${list.slice(3,5).map(seedingLine).join('')}<p><strong>3️⃣ Skincare &amp; Personal Hygiene</strong></p>${list.slice(5).map(seedingLine).join('')}<p><strong>🎬 TRIAL COLLABORATION</strong></p><p><strong>For this trial, we'd love you to create 5 videos featuring the 2 products you request.</strong></p><p><strong>The best part:</strong><br>✅ No draft approval or revisions<br>✅ Full creative freedom<br>✅ Free product samples<br>✅ Ads support</p><p><strong>📌 IMPORTANT</strong></p><p style="color: rgb(36, 36, 36); font-family: &quot;Segoe UI&quot;, &quot;Segoe UI Web (West European)&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; font-size: 15px;"><b>Please confirm after you</b> request 2 products from the list above, then reply with:<br><strong>Done + your TikTok username</strong></p><p>If you have trouble requesting samples, just let me know <b>by replying this email or messege me on Whatsapp</b></p><p>Looking forward to working with you! ❤️</p>`}
-function showcaseLine(p){return `<li><strong>${esc(p[0])}</strong>${p[1]?` — ${esc(p[1])}`:''}: <a href="${esc(p[4])}">${esc(p[4])}</a> (${esc(p[3])})</li>`}
-function buildShowcase(){const list=catalogProducts('showcase');return `<p>Hi dear (EMAIL NEED TO REPLY),</p><p>I’m Justin from USEE Media. An Official TikTok affiliate partner agency, and together with our creators, we’ve generated <strong>$100K+ in beauty GMV in just the last 14 days in October</strong>. Our goal is to help creators grow their sales and earn more.</p><p>We’re offering you a <strong>higher commission up to 34%, FREE 10+ product bundle with ads boosting support for high-potential videos, long-term collaboration opportunities, and GMV Max and Ads budget up to $60 per video.</strong></p><p>You only need to update the product link in your showcase, then use it for go live or put it on a video post.</p><p><strong>Pick Product link TOP Promotion &amp; Hot Selling (Based on TIKTOK Data):</strong></p><ul>${list.slice(0,5).map(showcaseLine).join('')}</ul><p><strong>ALL BRAND High Commission:</strong></p><ul>${list.slice(5).map(showcaseLine).join('')}</ul><p><strong>Get started:</strong></p><ol><li>Add the product to your showcase (you can also ask for free sample)</li><li>Reply this email with messege <strong>"YES UPDATED"</strong> to this email</li><li>Change the product link</li><li>Post the content after 24 hours since you update the link.</li></ol><p>Note: LIVE creators who use the links above will get a special voucher, high commission, and your price will be the lowest during the LIVE. If you go live for at least 4 hours a day, TikTok will give you high traffic. If you're not have the product. Please send request samples</p><p>Looking forward to working with you.</p>`}
-const templates={seeding:buildSeeding,showcase:buildShowcase};
-function renderTemplateOptions(){const select=$('#emailTemplate'),current=select.value;select.innerHTML='<option value="seeding">Seeding Product</option><option value="showcase">Showcase Link Update</option>';Object.keys(savedTemplates).forEach(name=>{const option=document.createElement('option');option.value='saved:'+name;option.textContent=name;select.appendChild(option)});if([...select.options].some(option=>option.value===current))select.value=current}
-function getTemplateHtml(key){return templates[key]?templates[key]():savedTemplates[key.slice(6)]||''}
-function refresh(){const html=getTemplateHtml($('#emailTemplate').value);$('#message').value=html;$('#preview').innerHTML=html;$('#emailPreview').innerHTML=html}
-$('#catalog').value=catalog;render();renderTemplateOptions();refresh();
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#'+b.dataset.tab).classList.add('active')});
-$('#products').onclick=e=>{if(e.target.dataset.remove){products.splice(+e.target.dataset.remove,1);render();if(templates[$('#emailTemplate').value])refresh()}};
-$('#products').oninput=e=>{if(!e.target.dataset.f)return;const row=e.target.closest('.product-row');products[+row.dataset.i][+e.target.dataset.f]=e.target.value.trim();if(templates[$('#emailTemplate').value])refresh()};
-$('#add').onclick=()=>{products.push(['','','','','']);render();if(templates[$('#emailTemplate').value])refresh()};
-function useCatalog(key){catalog=key;$('#catalog').value=key;products=loadCatalog(key);render()}
-$('#catalog').onchange=()=>{const key=$('#catalog').value;useCatalog(key);const template=key==='seeding'?'seeding':'showcase';$('#emailTemplate').value=template;refresh();$('#templateStatus').textContent=`${key==='seeding'?'Seeding':'Showcase'} catalog loaded.`};$('#save').onclick=()=>{products=read();localStorage.setItem(`useeProducts:${catalog}`,JSON.stringify(products));refresh();$('#templateStatus').textContent='Products saved.'};
-$('#refresh').onclick=refresh;$('#message').oninput=()=>{$('#preview').innerHTML=$('#message').value;$('#emailPreview').innerHTML=$('#message').value};$('#preview').oninput=()=>{$('#message').value=$('#preview').innerHTML};
-$('#copy').onclick=async()=>{await navigator.clipboard.writeText($('#preview').innerHTML);$('#templateStatus').textContent='HTML copied.'};$('#copyText').onclick=async()=>{const box=document.createElement('div');box.innerHTML=$('#preview').innerHTML;await navigator.clipboard.writeText(box.innerText);$('#templateStatus').textContent='Plain text copied.'};
-$('#saveTemplate').onclick=()=>{const name=$('#templateName').value.trim();if(!name)return $('#templateStatus').textContent='Isi nama template dulu.';savedTemplates[name]=$('#message').value;localStorage.setItem('useeTemplates',JSON.stringify(savedTemplates));renderTemplateOptions();$('#emailTemplate').value='saved:'+name;$('#templateStatus').textContent=`Template "${name}" tersimpan.`};$('#deleteTemplate').onclick=()=>{const key=$('#emailTemplate').value;if(!key.startsWith('saved:'))return $('#templateStatus').textContent='Pilih template saved untuk dihapus.';const name=key.slice(6);delete savedTemplates[name];localStorage.setItem('useeTemplates',JSON.stringify(savedTemplates));renderTemplateOptions();$('#emailTemplate').value='seeding';refresh();$('#templateStatus').textContent='Template dihapus.'};
-$('#emailTemplate').onchange=()=>{const key=$('#emailTemplate').value;if(key==='seeding'||key==='showcase')useCatalog(key);refresh()};
-$('#send').onclick=async()=>{const list=$('#emails').value.split(/[\n,;]/).map(x=>x.trim()).filter(Boolean),url=$('#endpoint').value.trim();if(!list.length||!url)return $('#emailStatus').textContent='Isi email target dan endpoint dulu.';const html=$('#message').value,batches=[];for(let i=0;i<list.length;i+=50)batches.push(list.slice(i,i+50));$('#send').disabled=true;try{for(let i=0;i<batches.length;i++){const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({EmailList:batches[i].join(';'),Text1:html})});if(!response.ok)throw new Error(`Batch ${i+1}: HTTP ${response.status}`);$('#emailStatus').textContent=`Batch ${i+1}/${batches.length} selesai.`}$('#emailStatus').textContent=`Selesai: ${list.length} email.`}catch(e){$('#emailStatus').textContent='Gagal mengirim: '+e.message}finally{$('#send').disabled=false}};
-</script></body></html>
+        <label for="endpoint" style="margin-top:18px">Power Automate endpoint</label>
+        <input id="endpoint" type="url" placeholder="Tempel URL trigger HTTP di sini">
+        <p class="hint">Endpoint sengaja kosong dan tidak disimpan. Apply tidak akan berjalan sebelum kamu mengisinya. Jangan bagikan URL ini.</p>
+
+        <div class="actions">
+          <button id="apply" type="button">Apply</button>
+          <span id="status" role="status"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <label for="template">Template pesan</label>
+        <select id="template">
+          <option value="campaign">Template 1 — Campaign lengkap</option>
+          <option value="short">Template 2 — Pesan singkat</option>
+          <option value="latest">Template 3 — Product list terbaru</option>
+          <option value="link-update">Template 4 — Update showcase link</option>
+        </select>
+        <div class="actions template-actions">
+          <button id="loadTemplate" type="button">Gunakan template</button>
+          <button id="formatTemplate" type="button" class="secondary">Auto-format</button>
+        </div>
+        <div class="template-save-row">
+          <input id="templateName" placeholder="Nama template baru">
+          <button id="saveTemplate" type="button">Save template</button>
+          <button id="deleteTemplate" type="button" class="danger">Delete saved</button>
+        </div>
+        <p class="hint">Auto-format menjaga isi, link, dan bold. Hanya merapikan paragraph, spacing, dan URL.</p>
+
+        <label style="margin-top:18px">Product database</label>
+        <div id="productRows"></div>
+        <div class="product-editor-actions">
+          <button id="addProduct" type="button">+ Add product</button>
+          <button id="updateProducts" type="button">Save product list</button>
+        </div>
+        <p class="hint">Edit kolomnya langsung. Perubahan tersimpan di browser ini.</p>
+
+        <label for="message">Pesan HTML</label>
+        <textarea id="message" placeholder="Paste HTML email di sini"></textarea>
+        <p class="hint">Edit langsung di preview. HTML dan pesan Power Automate ikut berubah otomatis.</p>
+        <div class="preview-tools" aria-label="Ukuran preview">
+          <button type="button" data-device="mobile" class="active">Mobile</button>
+          <button type="button" data-device="tablet">Tablet</button>
+          <button type="button" data-device="desktop">Desktop</button>
+        </div>
+        <div id="previewFrame" class="preview-frame mobile"><div id="preview" class="preview" contenteditable="true" spellcheck="true" aria-label="Editable message preview"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const emails = document.querySelector('#emails');
+    const endpoint = document.querySelector('#endpoint');
+    const message = document.querySelector('#message');
+    const template = document.querySelector('#template');
+    const loadTemplate = document.querySelector('#loadTemplate');
+    const formatTemplate = document.querySelector('#formatTemplate');
+    const templateName = document.querySelector('#templateName');
+    const saveTemplate = document.querySelector('#saveTemplate');
+    const deleteTemplate = document.querySelector('#deleteTemplate');
+    const productRows = document.querySelector('#productRows');
+    const addProduct = document.querySelector('#addProduct');
+    const updateProducts = document.querySelector('#updateProducts');
+    const preview = document.querySelector('#preview');
+    const previewFrame = document.querySelector('#previewFrame');
+    const apply = document.querySelector('#apply');
+    const status = document.querySelector('#status');
+
+    const latestProductGroups = [
+      {
+        title: 'Pick Product link TOP Promotion &amp; Hot Selling (Based on TIKTOK Data):',
+        products: [
+          ['Laura Geller Beauty', 'TOP 1 Cosmetics category', '19%', 'https://affiliate-us.tiktok.com/api/v1/share/AJR1ZpsOL2Tx'],
+          ['Missha.official', 'Top 2 Cosmetics Category', '16%', 'https://affiliate-us.tiktok.com/api/v1/share/AJr730r5qXKT'],
+          ['epais', 'TOP 3 selling', '17%', 'https://affiliate-us.tiktok.com/api/v1/share/AJm3Z1gBIGtc'],
+          ['DR.Melaxin eye cream', 'TOP 4', '24%', 'https://affiliate-us.tiktok.com/api/v1/share/AJgq5DuwThqi'],
+          ['DR.Melaxin acne patch', '', '24%', 'https://affiliate-us.tiktok.com/api/v1/share/AJgq5ObngzDG']
+        ]
+      },
+      {
+        title: 'ALL BRAND High Commission:',
+        products: [
+          ['Medicube', 'All product link', '19%', 'https://affiliate-us.tiktok.com/api/v1/share/AJoWb7mq7Igr'],
+          ['COSRX', 'All product link', '29%', 'https://affiliate-us.tiktok.com/api/v1/share/AJoWk2StXIJ3'],
+          ['SKIN1004', 'All product link', '24%', 'https://affiliate-us.tiktok.com/api/v1/share/AJoX6yXB3o1X']
+        ]
+      }
+    ];
+
+    const normalizeProduct = product => product.length === 4 ? [product[0], product[1], '', product[2], product[3]] : product;
+    const productLine = ([name, label, pid, commission, url]) => `<li><strong>${escapeHtml(name)}</strong>${label ? ` — ${escapeHtml(label)}` : ''}${pid ? ` [PID: ${escapeHtml(pid)}]` : ''}: <a href="${escapeHtml(url)}">${escapeHtml(url)}</a> (${escapeHtml(commission)})</li>`;
+    let latestProductHtml = latestProductGroups.map(group => `<p><strong>${escapeHtml(group.title)}</strong></p>
+<ul>${group.products.map(normalizeProduct).map(productLine).join('\n')}</ul>`).join('\n');
+
+    function buildLatestTemplate(productHtml) {
+      return `<p>Hi dear! ❤️ Thanks for your interest in our campaigns! 🎉</p>
+<p>I checked your profile and found some products that could be a great fit for your content. <strong>Please see the attachment when requesting products.</strong></p>
+<p>Here are the latest products you can choose from 👇</p>
+${productHtml}
+<p><strong>🎬 TRIAL COLLABORATION</strong></p>
+<p><strong>For this trial, we'd love you to create 5 videos featuring the 2 products you request.</strong></p>
+<p><strong>The best part:</strong><br>✅ No draft approval or revisions<br>✅ Full creative freedom<br>✅ Free product samples<br>✅ Ads support</p>
+<p>Please request 2 products from the list above, then reply with:<br><strong>Done + your TikTok username</strong></p>
+<p>Looking forward to working with you! ❤️</p>`;
+    }
+
+    function buildLinkUpdateTemplate(groups) {
+      const products = groups.flatMap(group => group.products.map(normalizeProduct));
+      return `<p>Hi dear,</p>
+<p>I’m Justin from USEE Media, an official TikTok affiliate partner agency.</p>
+<p>We’re offering higher commission up to <strong>34%</strong>, free product bundles, ads boosting support, and GMV Max opportunities for high-potential videos.</p>
+<p>You only need to update the product link in your showcase, then use it for a LIVE or video post.</p>
+<p><strong>Pick a product link:</strong></p>
+<ul>${products.map(productLine).join('\n')}</ul>
+<p><strong>Get started:</strong></p>
+<ol>
+<li>Add the product to your showcase (you can also request a free sample).</li>
+<li>Reply to this email with <strong>YES UPDATED</strong>.</li>
+<li>Change the product link.</li>
+<li>Post the content after 24 hours.</li>
+</ol>
+<p>Looking forward to working with you.</p>`;
+    }
+
+    const templates = {
+      campaign: `<p>Hi dear! ❤️ Thanks for your interest in our campaigns! 🎉</p>
+<p>I checked your profile and found some products that could be a great fit for your content. <strong>Please see the attachment when requesting products.</strong></p>
+<p>Here are 3 categories you can choose from 👇</p>
+<p><strong>1️⃣ Personal Care</strong></p>
+<p>Great for general personal care content. Includes ads support, trending products, and an average of $8–15 per sale.</p>
+<p>* <strong>NEW — JIYU (Korean Skincare Brand)</strong>. 31% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJqidq7XeolK</p>
+<p>* Medicube NAD+ EGF Power Duo. 20% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJZrU8uWnx8l</p>
+<p>* Skin 1004. 19% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJXwVMmP13JO</p>
+<p><strong>2️⃣ Makeup &amp; Cosmetics</strong></p>
+<p>Best for makeup creators. Includes free ads support and guaranteed GMV opportunities.</p>
+<p>* Laura Geller Foundation Kit. 22% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJV3UZBEKFGB</p>
+<p>* MISSHA M Perfect Cover BB Cream. 25% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJU0jd5roqBU</p>
+<p><strong>3️⃣ Skincare &amp; Personal Hygiene</strong></p>
+<p>* Phofay Hair Removal Cream. 15% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJSkxJHH6wRt</p>
+<p>* Centellian24. 20% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJooMytdSTQ1</p>
+<p>* d'Alba Piedmont. 17% commission<br>https://affiliate-us.tiktok.com/api/v1/share/AJosZNv3bW6Z</p>
+<p><strong>🎬 TRIAL COLLABORATION</strong></p>
+<p><strong>For this trial, we'd love you to create 5 videos featuring the 2 products you request.</strong></p>
+<p><strong>The best part:</strong><br>✅ No draft approval or revisions<br>✅ Full creative freedom<br>✅ Free product samples<br>✅ Ads support</p>
+<p>Please note that completing the 5 videos is required to maintain your showcase eligibility and comply with TikTok's campaign requirements.</p>
+<p><strong>📌 IMPORTANT</strong></p>
+<p>1. Please request 2 products from the list above. Other products may not be guaranteed approval.</p>
+<p>Not interested in these products? No worries! We have 700+ products from brands like VT Cosmetics and SKIN1004:<br>https://usee88-my.sharepoint.com/shared?id=%2Fpersonal%2Fhelmi%5Fusee%2Dmedia%5Fcom%2FDocuments%2FUSEE%20Media%20TAP%20%E2%80%93%20Creator%20Toolkit%20Brands%2Epdf</p>
+<p>Here's our step-by-step collaboration guide:<br>https://usee88-my.sharepoint.com/:b:/g/personal/helmi_usee-media_com/IQCGbGZijNLSR6nBa5S3k9jMAZ1mpWROQJYoYoaNCC1IN7Y?e=cuN3gN</p>
+<p><strong>PLEASE CONFIRM</strong> after requesting the samples by replying to this email with:<br><strong>"Done + your TikTok username"</strong></p>
+<p>If you have trouble requesting samples, just let me know. I'll also share the guide and October rewards to help you get started.</p>
+<p>Looking forward to working with you! ❤️</p>`,
+      short: `<p>Hi dear! ❤️ Thanks for your interest in our campaign! 🎉</p>
+<p>Please choose 2 products from the attached product list and request the samples.</p>
+<p>After requesting them, reply to this email with:<br><strong>Done + your TikTok username</strong></p>
+<p>Looking forward to working with you! ❤️</p>`,
+      latest: buildLatestTemplate(latestProductHtml),
+      'link-update': buildLinkUpdateTemplate(latestProductGroups)
+    };
+
+    let savedTemplates = {};
+    try { savedTemplates = JSON.parse(localStorage.getItem('bulkReplyTemplates') || '{}'); } catch {}
+
+    templates.campaign = templates.campaign.replace(/(https?:\/\/[^<\s]+)/g, '<a href="$1">$1</a>');
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+
+    function linkifyTextNodes(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      let node;
+      while (node = walker.nextNode()) if (!node.parentElement.closest('a,script,style')) nodes.push(node);
+      nodes.forEach(textNode => {
+        const value = textNode.nodeValue;
+        const urlPattern = /(https?:\/\/[^\s<]+)/g;
+        if (!urlPattern.test(value)) return;
+        urlPattern.lastIndex = 0;
+        const fragment = document.createDocumentFragment();
+        let cursor = 0;
+        value.replace(urlPattern, (url, offset) => {
+          fragment.append(value.slice(cursor, offset));
+          const cleanUrl = url.replace(/[),.;]+$/, '');
+          const link = document.createElement('a');
+          link.href = cleanUrl;
+          link.textContent = link.href;
+          fragment.append(link);
+          fragment.append(url.slice(cleanUrl.length));
+          cursor = offset + url.length;
+          return url;
+        });
+        fragment.append(value.slice(cursor));
+        textNode.replaceWith(fragment);
+      });
+    }
+
+    function formatHtml(input) {
+      const raw = String(input || '').trim();
+      if (!raw) return '';
+      const doc = new DOMParser().parseFromString(raw, 'text/html');
+      const hasElements = doc.body.querySelector('*');
+      if (!hasElements) return raw.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => `<p>${escapeHtml(line)}</p>`).join('\n');
+      [...doc.body.querySelectorAll('div')].forEach(div => {
+        const p = doc.createElement('p');
+        while (div.firstChild) p.appendChild(div.firstChild);
+        div.replaceWith(p);
+      });
+      [...doc.body.querySelectorAll('p,li')].forEach(block => {
+        if (!block.textContent.trim() && !block.querySelector('img')) block.remove();
+      });
+      linkifyTextNodes(doc.body);
+      return [...doc.body.childNodes].map(node => node.nodeType === Node.TEXT_NODE ? `<p>${escapeHtml(node.textContent.trim())}</p>` : node.outerHTML).filter(Boolean).join('\n');
+    }
+
+    function renderTemplateOptions(selected = template.value) {
+      [...template.querySelectorAll('option[data-saved]')].forEach(option => option.remove());
+      Object.keys(savedTemplates).sort().forEach(name => {
+        const option = document.createElement('option');
+        option.value = `saved:${name}`;
+        option.textContent = `Saved · ${name}`;
+        option.dataset.saved = 'true';
+        template.appendChild(option);
+      });
+      if ([...template.options].some(option => option.value === selected)) template.value = selected;
+    }
+
+    function renderProductEditor(groups) {
+      productRows.innerHTML = groups.map((group, groupIndex) => `<div class="product-group" data-group="${groupIndex}">
+        <input class="product-group-title" data-section-title value="${escapeHtml(group.title)}" aria-label="Section title">
+        ${group.products.map(normalizeProduct).map(([name, label, pid, commission, url], productIndex) => `<div class="product-row" data-product="${productIndex}">
+          <input data-field="name" value="${escapeHtml(name)}" placeholder="Product name" aria-label="Product name">
+          <input data-field="label" value="${escapeHtml(label)}" placeholder="Description / ranking" aria-label="Product description">
+          <input data-field="pid" value="${escapeHtml(pid)}" placeholder="Product ID / PID" aria-label="Product ID">
+          <input data-field="commission" value="${escapeHtml(commission)}" placeholder="19%" aria-label="Commission">
+          <input data-field="url" value="${escapeHtml(url)}" placeholder="https://..." aria-label="Product URL">
+          <button type="button" data-remove-product aria-label="Remove product">×</button>
+        </div>`).join('')}
+      </div>`).join('');
+    }
+
+    function collectProductGroups() {
+      return [...productRows.querySelectorAll('.product-group')].map(group => ({
+        title: group.querySelector('[data-section-title]').value.trim(),
+        products: [...group.querySelectorAll('.product-row')].map(row => [
+          row.querySelector('[data-field="name"]').value.trim(),
+          row.querySelector('[data-field="label"]').value.trim(),
+          row.querySelector('[data-field="pid"]').value.trim(),
+          row.querySelector('[data-field="commission"]').value.trim(),
+          row.querySelector('[data-field="url"]').value.trim()
+        ]).filter(product => product[0] && product[3] && product[4])
+      })).filter(group => group.title && group.products.length);
+    }
+
+    let savedProducts = null;
+    try { savedProducts = JSON.parse(localStorage.getItem('bulkReplyProducts') || 'null'); } catch {}
+    renderProductEditor(Array.isArray(savedProducts) && savedProducts.length ? savedProducts : latestProductGroups);
+
+    function refreshPreview() { preview.innerHTML = message.value; }
+    function updateDynamicTemplates(groups, replaceMessage = true) {
+      latestProductHtml = groups.map(group => `<p><strong>${escapeHtml(group.title)}</strong></p>\n<ul>${group.products.map(normalizeProduct).map(productLine).join('\n')}</ul>`).join('\n');
+      templates.latest = buildLatestTemplate(latestProductHtml);
+      templates['link-update'] = buildLinkUpdateTemplate(groups);
+      if (replaceMessage && (template.value === 'latest' || template.value === 'link-update')) {
+        message.value = templates[template.value];
+        refreshPreview();
+      }
+    }
+    updateDynamicTemplates(collectProductGroups(), false);
+    function useSelectedTemplate() {
+      const key = template.value;
+      message.value = key.startsWith('saved:') ? savedTemplates[key.slice(6)] || '' : templates[key];
+      refreshPreview();
+    }
+    message.addEventListener('input', refreshPreview);
+    preview.addEventListener('input', () => {
+      message.value = formatHtml(preview.innerHTML);
+      status.textContent = 'Preview edit synced to HTML.';
+    });
+    template.addEventListener('change', useSelectedTemplate);
+    loadTemplate.addEventListener('click', useSelectedTemplate);
+    formatTemplate.addEventListener('click', () => {
+      message.value = formatHtml(message.value);
+      refreshPreview();
+      status.textContent = 'HTML formatted. Isi tetap sama.';
+    });
+    saveTemplate.addEventListener('click', () => {
+      const name = templateName.value.trim();
+      if (!name) return status.textContent = 'Isi nama template dulu.';
+      const formatted = formatHtml(message.value);
+      if (!formatted) return status.textContent = 'Pesan kosong.';
+      savedTemplates[name] = formatted;
+      localStorage.setItem('bulkReplyTemplates', JSON.stringify(savedTemplates));
+      renderTemplateOptions(`saved:${name}`);
+      message.value = formatted;
+      refreshPreview();
+      status.textContent = `Template "${name}" tersimpan.`;
+    });
+    deleteTemplate.addEventListener('click', () => {
+      if (!template.value.startsWith('saved:')) return status.textContent = 'Pilih saved template dulu.';
+      const name = template.value.slice(6);
+      delete savedTemplates[name];
+      localStorage.setItem('bulkReplyTemplates', JSON.stringify(savedTemplates));
+      renderTemplateOptions('campaign');
+      useSelectedTemplate();
+      status.textContent = 'Saved template deleted.';
+    });
+    updateProducts.addEventListener('click', () => {
+      const groups = collectProductGroups();
+      if (!groups.length) return status.textContent = 'Format product belum valid.';
+      updateDynamicTemplates(groups);
+      localStorage.setItem('bulkReplyProducts', JSON.stringify(groups));
+      status.textContent = 'Product list berhasil diperbarui.';
+    });
+    productRows.addEventListener('input', () => {
+      const groups = collectProductGroups();
+      if (!groups.length) return;
+      updateDynamicTemplates(groups);
+      status.textContent = 'Preview live updated.';
+    });
+    productRows.addEventListener('click', event => {
+      if (event.target.matches('[data-remove-product]')) {
+        event.target.closest('.product-row').remove();
+        const groups = collectProductGroups();
+        updateDynamicTemplates(groups);
+        status.textContent = 'Product removed from preview.';
+      }
+    });
+    addProduct.addEventListener('click', () => {
+      const group = productRows.querySelector('.product-group');
+      if (!group) return;
+      const row = document.createElement('div');
+      row.className = 'product-row';
+      row.innerHTML = '<input data-field="name" placeholder="Product name" aria-label="Product name"><input data-field="label" placeholder="Description / ranking" aria-label="Product description"><input data-field="pid" placeholder="Product ID / PID" aria-label="Product ID"><input data-field="commission" placeholder="19%" aria-label="Commission"><input data-field="url" placeholder="https://..." aria-label="Product URL"><button type="button" data-remove-product aria-label="Remove product">×</button>';
+      group.appendChild(row);
+      status.textContent = 'New product row added.';
+    });
+    renderTemplateOptions();
+    document.querySelectorAll('[data-device]').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-device]').forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+        previewFrame.className = `preview-frame ${button.dataset.device}`;
+      });
+    });
+    apply.addEventListener('click', async () => {
+      const rawTargets = emails.value.split(/\r?\n|,|;/).map(v => v.trim()).filter(Boolean);
+      const invalidTargets = rawTargets.filter(email => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+      const targets = [...new Set(rawTargets.filter(email => !invalidTargets.includes(email)))];
+      if (invalidTargets.length) return status.textContent = `Email tidak valid: ${invalidTargets.slice(0, 2).join(', ')}${invalidTargets.length > 2 ? '…' : ''}`;
+      if (!targets.length) return status.textContent = 'Isi email target dulu.';
+      try { if (!/^https?:\/\//i.test(endpoint.value) || !new URL(endpoint.value)) throw new Error(); } catch { return status.textContent = 'Endpoint harus berupa URL HTTP yang valid.'; }
+      if (!message.value.trim()) return status.textContent = 'Isi pesan dulu.';
+
+      const batches = [];
+      for (let i = 0; i < targets.length; i += 50) batches.push(targets.slice(i, i + 50));
+
+      apply.disabled = true;
+      status.textContent = `Menyiapkan ${batches.length} batch…`;
+      try {
+        for (let i = 0; i < batches.length; i++) {
+          status.textContent = `Mengirim batch ${i + 1}/${batches.length} (${batches[i].length} email)…`;
+          const response = await fetch(endpoint.value, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ EmailList: batches[i].join(';'), Text1: message.value })
+          });
+          if (!response.ok) throw new Error(`Batch ${i + 1}: HTTP ${response.status}`);
+          const resultText = await response.text();
+          if (resultText) {
+            try {
+              const result = JSON.parse(resultText);
+              if (result.status && result.status !== 'completed') throw new Error(`Batch ${i + 1}: ${result.status}`);
+            } catch (error) {
+              if (error.message.startsWith('Batch ')) throw error;
+            }
+          }
+          status.textContent = `Batch ${i + 1}/${batches.length} selesai (${batches[i].length} email).`;
+        }
+        status.textContent = `Selesai: ${targets.length} email dalam ${batches.length} batch.`;
+      } catch (error) {
+        status.textContent = `Gagal: ${error.message}`;
+      } finally {
+        apply.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
