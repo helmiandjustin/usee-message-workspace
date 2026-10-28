@@ -46,6 +46,10 @@
     .product-row button { padding: 7px 10px; background: #fff0f0; color: #d92d20; }
     .product-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .template-save-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 10px; }
+    .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .schedule-grid[hidden] { display: none; }
+    .schedule-grid label { margin-top: 0; }
+    .schedule-note { margin: 8px 0 0; }
     @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
     @media (max-width: 700px) { .product-row { grid-template-columns: 1fr 1fr; } .product-row input:nth-child(5) { grid-column: 1 / -1; } .template-save-row { grid-template-columns: 1fr; } }
   </style>
@@ -65,6 +69,21 @@
         <label for="endpoint" style="margin-top:18px">Power Automate endpoint</label>
         <input id="endpoint" type="url" placeholder="Tempel URL trigger HTTP di sini">
         <p class="hint">Endpoint sengaja kosong dan tidak disimpan. Apply tidak akan berjalan sebelum kamu mengisinya. Jangan bagikan URL ini.</p>
+
+        <label for="subject" style="margin-top:18px">Subject email</label>
+        <input id="subject" placeholder="Subject email (opsional)">
+
+        <label for="sendMode" style="margin-top:18px">Waktu kirim</label>
+        <select id="sendMode">
+          <option value="now">Send now</option>
+          <option value="schedule">Schedule send</option>
+        </select>
+        <div id="scheduleFields" class="schedule-grid" hidden>
+          <label>Send at<input id="sendAt" type="datetime-local"></label>
+          <label>Timezone<select id="timeZone"><option value="SE Asia Standard Time">Asia/Jakarta</option><option value="UTC">UTC</option><option value="Eastern Standard Time">America/New_York</option></select></label>
+          <label>Jarak antar batch (menit)<input id="batchDelay" type="number" min="0" step="1" value="0"></label>
+        </div>
+        <p class="hint schedule-note">Schedule tetap berjalan saat browser ditutup. Power Automate harus memakai nilai SendAt untuk Delay until.</p>
 
         <div class="actions">
           <button id="apply" type="button">Apply</button>
@@ -116,6 +135,12 @@
   <script>
     const emails = document.querySelector('#emails');
     const endpoint = document.querySelector('#endpoint');
+    const subject = document.querySelector('#subject');
+    const sendMode = document.querySelector('#sendMode');
+    const scheduleFields = document.querySelector('#scheduleFields');
+    const sendAt = document.querySelector('#sendAt');
+    const timeZone = document.querySelector('#timeZone');
+    const batchDelay = document.querySelector('#batchDelay');
     const message = document.querySelector('#message');
     const template = document.querySelector('#template');
     const loadTemplate = document.querySelector('#loadTemplate');
@@ -326,6 +351,14 @@ ${productHtml}
     try { savedProducts = JSON.parse(localStorage.getItem('bulkReplyProducts') || 'null'); } catch {}
     renderProductEditor(Array.isArray(savedProducts) && savedProducts.length ? savedProducts : latestProductGroups);
 
+    function htmlToPlainText(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return doc.body.innerText.replace(/\n{3,}/g, '\n\n').trim();
+    }
+    function toggleScheduleFields() { scheduleFields.hidden = sendMode.value !== 'schedule'; }
+    sendMode.addEventListener('change', toggleScheduleFields);
+    toggleScheduleFields();
+
     function refreshPreview() { preview.innerHTML = message.value; }
     function updateDynamicTemplates(groups, replaceMessage = true) {
       latestProductHtml = groups.map(group => `<p><strong>${escapeHtml(group.title)}</strong></p>\n<ul>${group.products.map(normalizeProduct).map(productLine).join('\n')}</ul>`).join('\n');
@@ -421,6 +454,10 @@ ${productHtml}
       if (!targets.length) return status.textContent = 'Isi email target dulu.';
       try { if (!/^https?:\/\//i.test(endpoint.value) || !new URL(endpoint.value)) throw new Error(); } catch { return status.textContent = 'Endpoint harus berupa URL HTTP yang valid.'; }
       if (!message.value.trim()) return status.textContent = 'Isi pesan dulu.';
+      if (sendMode.value === 'schedule') {
+        if (!sendAt.value) return status.textContent = 'Pilih tanggal dan waktu kirim.';
+        if (new Date(sendAt.value).getTime() <= Date.now()) return status.textContent = 'Waktu schedule harus di masa depan.';
+      }
 
       const batches = [];
       for (let i = 0; i < targets.length; i += 50) batches.push(targets.slice(i, i + 50));
@@ -433,7 +470,19 @@ ${productHtml}
           const response = await fetch(endpoint.value, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ EmailList: batches[i].join(';'), Text1: message.value })
+            body: JSON.stringify({
+              EmailList: batches[i].join(';'),
+              Text1: message.value,
+              HtmlBody: message.value,
+              PlainTextBody: htmlToPlainText(message.value),
+              Subject: subject.value.trim(),
+              SendMode: sendMode.value,
+              SendAt: sendMode.value === 'schedule' ? sendAt.value : '',
+              TimeZone: timeZone.value,
+              BatchNumber: i + 1,
+              BatchTotal: batches.length,
+              BatchDelayMinutes: sendMode.value === 'schedule' ? Number(batchDelay.value) || 0 : 0
+            })
           });
           if (!response.ok) throw new Error(`Batch ${i + 1}: HTTP ${response.status}`);
           const resultText = await response.text();
@@ -447,7 +496,9 @@ ${productHtml}
           }
           status.textContent = `Batch ${i + 1}/${batches.length} selesai (${batches[i].length} email).`;
         }
-        status.textContent = `Selesai: ${targets.length} email dalam ${batches.length} batch.`;
+        status.textContent = sendMode.value === 'schedule'
+          ? `Terjadwal: ${targets.length} email dalam ${batches.length} batch.`
+          : `Selesai: ${targets.length} email dalam ${batches.length} batch.`;
       } catch (error) {
         status.textContent = `Gagal: ${error.message}`;
       } finally {
